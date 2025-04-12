@@ -1,8 +1,7 @@
+import 'package:ar_demo_ti/movingobjects.dart';
+import 'package:flutter/cupertino.dart';
 // ignore: file_names
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:ar_demo_ti/movingobjects.dart';
-import 'package:ar_demo_ti/main.dart';
 
 //https://protocoderspoint.com/how-to-show-slider-in-bottom-sheet-in-flutter/
 // ignore: must_be_immutable
@@ -128,8 +127,8 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                       value: moving!.isrotate![1],
                                       title: const Text('Y'),
                                       onChanged: (bool value) {
-                                        showAlertDialog(context, "Rotation",
-                                            "Y axis under constucion.");
+                                        // showAlertDialog(context, "Rotation",
+                                        //     "Y axis under constucion.");
                                         return;
                                       }),
                                 ),
@@ -162,8 +161,8 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                       value: moving!.isrotate![2],
                                       title: const Text('Z'),
                                       onChanged: (bool value) {
-                                        showAlertDialog(context, "Rotation",
-                                            "Z axis under constucion.");
+                                        // showAlertDialog(context, "Rotation",
+                                        //     "Z axis under constucion.");
                                         return;
                                       }),
                                 ),
