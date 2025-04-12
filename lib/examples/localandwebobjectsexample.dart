@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:ar_demo_ti/examples/BottomSheet.dart';
 import 'package:ar_demo_ti/movingobjects.dart';
 import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
 import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
@@ -14,26 +13,27 @@ import 'package:ar_flutter_plugin/models/ar_anchor.dart';
 import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:flutter/material.dart';
-import 'package:vector_math/vector_math_64.dart';
+import 'package:vector_math/vector_math_64.dart' as vector_math;
 
 class LocalAndWebObjectsWidget extends StatefulWidget {
-  const LocalAndWebObjectsWidget({Key? key}) : super(key: key);
+  final String uri;
+  final vector_math.Vector3 scale;
+  final String title;
+  final String description;
+
+  LocalAndWebObjectsWidget({
+    Key? key,
+    required this.uri,
+    vector_math.Vector3? scale,
+    this.title = "Objeto 3D",
+    this.description = "Visualização de um objeto 3D em realidade aumentada.",
+  })  : scale = scale ?? vector_math.Vector3(0.2, 0.2, 0.2),
+        super(key: key);
+
   @override
   // ignore: library_private_types_in_public_api
   _LocalAndWebObjectsWidgetState createState() =>
       _LocalAndWebObjectsWidgetState();
-}
-
-class ListItem {
-  int? value;
-  String? name;
-  String? uri;
-  Vector3? scale;
-  ListItem({required value, required name, required uri, scale})
-      : name = name ?? UniqueKey().toString(),
-        uri = uri ?? UniqueKey().toString(),
-        value = value ?? 0,
-        scale = scale ?? Vector3(0.2, 0.2, 0.2);
 }
 
 class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
@@ -51,133 +51,19 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
   Timer? timerrot;
   AlwaysStoppedAnimation<Color>? progressvalueColor =
       const AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 252, 1, 1));
+  vector_math.Vector3 currentScale = vector_math.Vector3(0.2, 0.2, 0.2);
+  bool autoRotate = false;
+  int rotationAxis = 1; // 0 = x, 1 = y, 2 = z
 
-  final List<ListItem> _dropdownItems = [
-    ListItem(value: 0, name: "None", uri: ""),
-    ListItem(
-        value: 1,
-        name: "Duck (Kacsa)",
-        uri:
-            "github.com/KhronosGroup/glTF-Sample-Models/raw/main/2.0/Duck/glTF-Binary/Duck.glb"),
-    ListItem(
-        value: 2,
-        name: "Box (Kocka)",
-        uri:
-            "github.com/artaxerxesnazareno/ar_medicine_v2_app/raw/main/assets/models/realistic_human_heart.glb"),
-    ListItem(
-        value: 3,
-        name: "Avocado (Avokádó)",
-        uri:
-            "github.com/KhronosGroup/glTF-Sample-Models/raw/main/2.0/Avocado/glTF-Binary/Avocado.glb",
-        scale: Vector3(4.0, 4.0, 4.0)),
-    ListItem(
-        value: 4,
-        name: "Barramundi Fish (Hal)",
-        uri:
-            "github.com/KhronosGroup/glTF-Sample-Models/raw/main/2.0/BarramundiFish/glTF-Binary/BarramundiFish.glb",
-        scale: Vector3(1.0, 1.0, 1.0)),
-    ListItem(
-        value: 5,
-        name: "BoxTextured (Kocka felülettel)",
-        uri:
-            "github.com/KhronosGroup/glTF-Sample-Models/raw/main/2.0/BoxTextured/glTF-Binary/BoxTextured.glb"),
-    //scale: Vector3(1.0, 1.0, 1.0))
-    ListItem(
-        value: 6,
-        name: "Box Colors (Szines Kocka)",
-        uri:
-            "github.com/KhronosGroup/glTF-Sample-Models/raw/main/2.0/BoxVertexColors/glTF-Binary/BoxVertexColors.glb"),
-    ListItem(
-        value: 7,
-        name: "Buggy (Bricska)",
-        uri:
-            "github.com/KhronosGroup/glTF-Sample-Models/raw/main/2.0/Buggy/glTF-Binary/Buggy.glb"),
-    ListItem(
-        value: 8,
-        name: "CesiumMan (Cesium ember)",
-        uri:
-            "github.com/KhronosGroup/glTF-Sample-Models/raw/main/2.0/CesiumMan/glTF-Binary/CesiumMan.glb"),
-    ListItem(
-        value: 9,
-        name: "Fox (Róka)",
-        uri:
-            "github.com/KhronosGroup/glTF-Sample-Models/raw/main/2.0/Fox/glTF-Binary/Fox.glb",
-        scale: Vector3(0.1, 0.1, 0.1)),
-    ListItem(
-        value: 10,
-        name: "LightsPunctualLamp (Lámpa)",
-        uri:
-            "github.com/KhronosGroup/glTF-Sample-Models/raw/main/2.0/LightsPunctualLamp/glTF-Binary/LightsPunctualLamp.glb"),
-    ListItem(
-        value: 11,
-        name: "LightsPunctualLamp (Lámpa)",
-        uri:
-            "github.com/KhronosGroup/glTF-Sample-Models/raw/main/2.0/LightsPunctualLamp/glTF-Binary/LightsPunctualLamp.glb"),
-    ListItem(
-        value: 12,
-        name: "OrientationTest (---)",
-        uri:
-            "github.com/KhronosGroup/glTF-Sample-Models/raw/main/2.0/OrientationTest/glTF-Binary/OrientationTest.glb"),
-    ListItem(
-        value: 13,
-        name: "WaterBottle (Vizesüveg)",
-        uri:
-            "github.com/KhronosGroup/glTF-Sample-Models/raw/main/2.0/WaterBottle/glTF-Binary/WaterBottle.glb",
-        scale: Vector3(0.75, 0.75, 0.75))
-  ];
-  int? _value = 0;
-
-  void rotobject() {
-    try {
-      setState(() {
-        if (moving!.isrotate![0]) {
-          if (moving!.rotation![0] > 360) {
-            moving!.rotation![0] = 0;
-          } else {
-            moving!.rotation![0] = moving!.rotation![0] + 5;
-          }
-          Matrix4 newMatrix = Matrix4.copy(moving!.webObjectNode!.transform);
-          newMatrix.rotate(
-              Vector3(1, 0, 0), moving!.rotation![0] * 3.1415927 / 180);
-          moving!.webObjectNode!.transform = newMatrix;
-        }
-        if (moving!.isrotate![1]) {
-          if (moving!.rotation![1] > 360) {
-            moving!.rotation![1] = 0;
-          } else {
-            moving!.rotation![1] = moving!.rotation![1] + 5;
-          }
-          Matrix4 newMatrix = Matrix4.copy(moving!.webObjectNode!.transform);
-          newMatrix.rotate(
-              Vector3(0, 1, 0), moving!.rotation![1] * 3.1415927 / 180);
-          moving!.webObjectNode!.transform = newMatrix;
-        }
-        if (moving!.isrotate![2]) {
-          if (moving!.rotation![2] > 360) {
-            moving!.rotation![2] = 0;
-          } else {
-            moving!.rotation![2] = moving!.rotation![2] + 5;
-          }
-          Matrix4 newMatrix = Matrix4.copy(moving!.webObjectNode!.transform);
-          newMatrix.rotate(
-              Vector3(0, 0, 1), moving!.rotation![2] * 3.1415927 / 180);
-          moving!.webObjectNode!.transform = newMatrix;
-        }
-      });
-    } catch (error) {
-      rethrow;
-    }
-  }
-
-//https://blog.logrocket.com/understanding-flutter-timer-class-timer-periodic/
   @override
   void initState() {
     super.initState();
+    currentScale = widget.scale;
     moving = MovingObject(
         webObjectNode: null,
         webAnchor: null,
-        position: Vector3.zero(),
-        rotation: Vector3.zero(),
+        position: vector_math.Vector3.zero(),
+        rotation: vector_math.Vector3.zero(),
         isrotate: [false, false, false]);
     timerrot = Timer.periodic(Duration(milliseconds: elapsedMs), (timerrot) {
       try {
@@ -208,7 +94,14 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Web Objects (Web-ről testek)'),
+        title: const Text('Realidade Aumentada'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: _showExplanationDialog,
+            tooltip: 'Informações sobre o objeto',
+          ),
+        ],
       ),
       body: Stack(
         children: [
@@ -224,54 +117,247 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
             valueColor: progressvalueColor,
             value: progress,
           )),
-          Align(
-            alignment: FractionalOffset.bottomCenter,
-            heightFactor: 0.15,
-            child: Container(
-              color: const Color.fromARGB(0, 255, 255, 255).withOpacity(1),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const Text(
-                    '3D objects (testek)?',
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+          Positioned(
+            bottom: 20,
+            left: 0,
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildControlButton(
+                            icon: Icons.remove,
+                            onPressed: _decreaseScale,
+                            tooltip: 'Diminuir escala',
+                          ),
+                          _buildControlButton(
+                            icon: Icons.add,
+                            onPressed: _increaseScale,
+                            tooltip: 'Aumentar escala',
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildControlButton(
+                            icon: Icons.rotate_left,
+                            onPressed: () => _toggleRotation(0),
+                            tooltip: 'Rotação eixo X',
+                            isActive: moving?.isrotate?[0] ?? false,
+                          ),
+                          _buildControlButton(
+                            icon: Icons.rotate_90_degrees_ccw,
+                            onPressed: () => _toggleRotation(1),
+                            tooltip: 'Rotação eixo Y',
+                            isActive: moving?.isrotate?[1] ?? false,
+                          ),
+                          _buildControlButton(
+                            icon: Icons.rotate_right,
+                            onPressed: () => _toggleRotation(2),
+                            tooltip: 'Rotação eixo Z',
+                            isActive: moving?.isrotate?[2] ?? false,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  DropdownButton(
-                    value: _value,
-                    isExpanded: true,
-                    items: _dropdownItems.map((ListItem item) {
-                      return DropdownMenuItem<int>(
-                        value: item.value,
-                        child: Text(item.name!),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _value = value;
-                        if (value == 0) {
-                          if (moving!.webObjectNode != null) {
-                            arObjectManager!.removeNode(moving!.webObjectNode!);
-                            arAnchorManager!.removeAnchor(moving!.webAnchor!);
-                            moving!.webObjectNode = null;
-                            moving!.webAnchor = null;
-                          }
-                        }
-                        stopTimer();
-                      });
-                    },
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
-          MyBottomSheet(
-            moving: moving,
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildControlButton({
+    required IconData icon,
+    required VoidCallback onPressed,
+    required String tooltip,
+    bool isActive = false,
+  }) {
+    return Tooltip(
+      message: tooltip,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isActive ? Colors.blue : null,
+          shape: const CircleBorder(),
+          padding: const EdgeInsets.all(16),
+          elevation: 4,
+        ),
+        child: Icon(icon),
+      ),
+    );
+  }
+
+  void _showExplanationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(widget.title),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.description,
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Instruções:',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                const SizedBox(height: 8),
+                _buildInstructionItem(
+                  'Toque na superfície plana para posicionar o objeto 3D.',
+                ),
+                _buildInstructionItem(
+                  'Use os botões + e - para ajustar o tamanho.',
+                ),
+                _buildInstructionItem(
+                  'Ative as rotações nos diferentes eixos com os botões abaixo.',
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Fechar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildInstructionItem(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('• ', style: TextStyle(fontSize: 16)),
+          Expanded(
+            child: Text(text, style: const TextStyle(fontSize: 16)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _increaseScale() {
+    if (moving?.webObjectNode != null) {
+      setState(() {
+        currentScale = vector_math.Vector3(
+          currentScale.x + 0.05,
+          currentScale.y + 0.05,
+          currentScale.z + 0.05,
+        );
+        _updateNodeScale();
+      });
+    }
+  }
+
+  void _decreaseScale() {
+    if (moving?.webObjectNode != null) {
+      if (currentScale.x > 0.1) {
+        setState(() {
+          currentScale = vector_math.Vector3(
+            currentScale.x - 0.05,
+            currentScale.y - 0.05,
+            currentScale.z - 0.05,
+          );
+          _updateNodeScale();
+        });
+      }
+    }
+  }
+
+  void _updateNodeScale() {
+    if (moving?.webObjectNode != null) {
+      Matrix4 newTransform = Matrix4.identity();
+      newTransform.setTranslation(moving!.webObjectNode!.position);
+      newTransform.rotate(vector_math.Vector3(1, 0, 0), moving!.rotation![0] * 3.1415927 / 180);
+      newTransform.rotate(vector_math.Vector3(0, 1, 0), moving!.rotation![1] * 3.1415927 / 180);
+      newTransform.rotate(vector_math.Vector3(0, 0, 1), moving!.rotation![2] * 3.1415927 / 180);
+      newTransform.scale(currentScale.x, currentScale.y, currentScale.z);
+      moving!.webObjectNode!.transform = newTransform;
+    }
+  }
+
+  void _toggleRotation(int axis) {
+    if (moving?.webObjectNode != null) {
+      setState(() {
+        // Parar todas as rotações
+        if (moving!.isrotate![axis]) {
+          moving!.isrotate![axis] = false;
+        } else {
+          // Parar outras rotações ao ativar uma
+          moving!.isrotate = [false, false, false];
+          moving!.isrotate![axis] = true;
+        }
+      });
+    }
+  }
+
+  void rotobject() {
+    try {
+      setState(() {
+        if (moving!.isrotate![0]) {
+          if (moving!.rotation![0] > 360) {
+            moving!.rotation![0] = 0;
+          } else {
+            moving!.rotation![0] = moving!.rotation![0] + 5;
+          }
+          Matrix4 newMatrix = Matrix4.copy(moving!.webObjectNode!.transform);
+          newMatrix.rotate(
+              vector_math.Vector3(1, 0, 0), moving!.rotation![0] * 3.1415927 / 180);
+          moving!.webObjectNode!.transform = newMatrix;
+        }
+        if (moving!.isrotate![1]) {
+          if (moving!.rotation![1] > 360) {
+            moving!.rotation![1] = 0;
+          } else {
+            moving!.rotation![1] = moving!.rotation![1] + 5;
+          }
+          Matrix4 newMatrix = Matrix4.copy(moving!.webObjectNode!.transform);
+          newMatrix.rotate(
+              vector_math.Vector3(0, 1, 0), moving!.rotation![1] * 3.1415927 / 180);
+          moving!.webObjectNode!.transform = newMatrix;
+        }
+        if (moving!.isrotate![2]) {
+          if (moving!.rotation![2] > 360) {
+            moving!.rotation![2] = 0;
+          } else {
+            moving!.rotation![2] = moving!.rotation![2] + 5;
+          }
+          Matrix4 newMatrix = Matrix4.copy(moving!.webObjectNode!.transform);
+          newMatrix.rotate(
+              vector_math.Vector3(0, 0, 1), moving!.rotation![2] * 3.1415927 / 180);
+          moving!.webObjectNode!.transform = newMatrix;
+        }
+      });
+    } catch (error) {
+      rethrow;
+    }
   }
 
   onPanStarted(String nodeName) {}
@@ -295,8 +381,7 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
       moving!.webAnchor = null;
     }
     try {
-      if (_dropdownItems[_value!].name == "None") return;
-      if (_dropdownItems[_value!].uri == "") return;
+      if (widget.uri.isEmpty) return;
 
       var singleHitTestResult = hitTestResults.firstWhere(
           (hitTestResult) => hitTestResult.type == ARHitTestResultType.plane);
@@ -311,18 +396,14 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
           // Add note to anchor
           progress = 0;
           startTimer(max: 6000);
-          String uriitem = "https://${_dropdownItems[_value!].uri}";
+          String uriitem = "https://${widget.uri}";
           var newNode = ARNode(
               type: NodeType.webGLB,
               uri: uriitem,
-              //uri:
-              //    "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-              //scale: Vector3(0.2, 0.2, 0.2),
-              scale: _dropdownItems[_value!].scale,
-              position: Vector3(0.0, 0.0, 0.0),
-              rotation: Vector4(1.0, 0.0, 0.0, 0.0));
-          //  transformation: const MatrixConverter().fromJson(map["transformation"])
-          //        ..rotateY(10.0 * 3.1415927 / 180),
+              scale: currentScale,
+              position: vector_math.Vector3(0.0, 0.0, 0.0),
+              rotation: vector_math.Vector4(1.0, 0.0, 0.0, 0.0));
+
           bool? didAddNodeToAnchor =
               await arObjectManager!.addNode(newNode, planeAnchor: newAnchor);
           if (didAddNodeToAnchor!) {
@@ -340,7 +421,6 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
       }
       // ignore: empty_catches
     } catch (error) {}
-    //print("nPlaneOrPointTapped");
   }
 
   void onARViewCreated(
@@ -357,8 +437,6 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
           showPlanes: true,
           customPlaneTexturePath: "assets/triangle.png",
           showWorldOrigin: false,
-          //showWorldOrigin: true,
-          //showAnimatedGuide: true,
           showAnimatedGuide: false,
           handleTaps: true,
           handleRotation: false,
@@ -377,23 +455,10 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
     this.arObjectManager!.onRotationStart = onRotationStarted;
     this.arObjectManager!.onRotationChange = onRotationChanged;
     this.arObjectManager!.onRotationEnd = onRotationEnded;
-
-    //this.arObjectManager!.onRotationStart;
-
-    //Download model to file system
-    //httpClient = HttpClient();
-    //_downloadFile(
-    //    "https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/Duck/glTF-Binary/Duck.glb",
-    //    "LocalDuck.glb");
-    //   "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb"
-    // Alternative to use type fileSystemAppFolderGLTF2:
-    //_downloadAndUnpack(
-    //    "https://drive.google.com/uc?export=download&id=1fng7yiK0DIR0uem7XkV2nlPSGH9PysUs",
-    //    "Chicken_01.zip");
   }
 
   delayed(int sec) async {
-    await Future.delayed(Duration(seconds: sec)); // or some time consuming call
+    await Future.delayed(Duration(seconds: sec));
     return true;
   }
 
@@ -403,7 +468,6 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
       const Duration(milliseconds: 250),
       (Timer timer) => setState(
         () {
-          //  print("TI: _stopTimer:" '$_stopTimer');
           if ((progress! >= max) || _stopTimer) {
             progress = 0;
             timer.cancel();
@@ -427,93 +491,4 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
   void stopTimerRotation() {
     _stopTimerRotation = true;
   }
-
-  // ignore: duplicate_ignore,, unused_element
-  /* Future<void> _downloadAndUnpack(String url, String filename) async {
-    var request = await httpClient!.getUrl(Uri.parse(url));
-    var response = await request.close();
-    var bytes = await consolidateHttpClientResponseBytes(response);
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    // ignore: unnecessary_new
-    File file = new File('$dir/$filename');
-    await file.writeAsBytes(bytes);
-    // ignore: prefer_adjacent_string_concatenation
-    print("Downloading finished, path: " + '$dir/$filename');
-
-    // To print all files in the directory: print(Directory(dir).listSync());
-    try {
-      await ZipFile.extractToDirectory(
-          zipFile: File('$dir/$filename'), destinationDir: Directory(dir));
-      print("Unzipping successful");
-    } catch (e) {
-      // ignore: prefer_interpolation_to_compose_strings
-      print("Unzipping failed: " + e.toString());
-    }
-  }*/
-
-/*  Future<File> _downloadFile(String url, String filename) async {
-    try {
-      var request = await httpClient!.getUrl(Uri.parse(url));
-      var response = await request.close();
-      var bytes = await consolidateHttpClientResponseBytes(response);
-      //String dir = (await getApplicationDocumentsDirectory()).path;
-      Directory? dir = (await getExternalStorageDirectory());
-
-      File file = File('$dir/$filename');
-      await file.writeAsBytes(bytes);
-      print("TI:Downloading finished, path: " '$dir/$filename');
-      var b = await file.exists();
-      if (b == false) {
-        print("TI:error: not exists");
-        return File("");
-      }
-
-      //data/user/0/com.example.a_demo_ti/app_flutter/LocalDuck.glb
-      return file;
-    } catch (exp) {
-      print("TI:error: $exp");
-    }
-    return File("");
-  }*/
-
-  /* Future<void> onWebObjectAtOriginButtonPressed() async {
-    if (GlobalDatas.webObjectNode != null) {
-      arObjectManager!.removeNode(GlobalDatas.webObjectNode!);
-      GlobalDatas.webObjectNode = null;
-      //GlobalDatas.didAddWebNode = false;
-    }
-    if (_dropdownItems[_value!].uri == "") return;
-    progress = 0;
-    startTimer(max: 6000);
-    String _uriitem = "https://" + _dropdownItems[_value!].uri;
-    // await delayed(5);
-    //stopTimer();
-    //  print("TI:" '$_uriitem');
-//https://www.woolha.com/tutorials/flutter-using-circularprogressindicator-examples
-    //https://stackoverflow.com/questions/53872082/how-to-fix-my-code-to-show-alert-dialog-on-flutter#:~:text=Here%20is%20the%20full%20error%3A%20I%2Fflutter%20%289767%29%3A%20confirm,showing%20processingdialog%20I%2Fflutter%20%289767%29%3A%20processdialog%20is%20being%20shown.
-    //File file = _downloadFile( "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb", "LocalDuck.glb") as File;
-
-    //print(x); // gives true
-    //await Future.delayed(Duration(seconds: 5));
-
-    newNode = ARNode(
-        type: NodeType.webGLB,
-        uri: _uriitem,
-        //      uri:
-        //          "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-        //position: Vector3(GlobalDatas.posX, GlobalDatas.posY, GlobalDatas.posZ),
-        //  rotation:
-        //     Vector4(GlobalDatas.rotX, GlobalDatas.rotY, GlobalDatas.rotZ, 0.0),
-        //eulerAngles: Vector3(GlobalDatas.rotX, 0.0, 0.0),
-        //transformation: Matrix4.rotationY(0.0009),
-        //         const MatrixConverter().fromJson(map["transformation"])
-        //           ..rotateY(<degree> * 3.1415927 / 180),
-        scale: Vector3(0.1, 0.1, 0.1));
-    bool? didAddWebNode = await arObjectManager!.addNode(newNode!);
-    print("TI:" '$_uriitem');
-    GlobalDatas.webObjectNode = (didAddWebNode!) ? newNode : null;
-    stopTimer();
-    GlobalDatas.clearPosRotValues();
-    //   startTimerRotation(elapsed: 1000);
-  }*/
 }

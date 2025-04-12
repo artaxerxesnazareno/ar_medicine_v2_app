@@ -410,7 +410,9 @@ class ExampleList extends StatelessWidget {
           () => Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const LocalAndWebObjectsWidget()))),
+                  builder: (context) => LocalAndWebObjectsWidget(
+                    models: ModelRepository.getModels(),
+                  )))),
     ];
     return ListView(
       children:

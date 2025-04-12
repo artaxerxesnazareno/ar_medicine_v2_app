@@ -2,6 +2,7 @@ import 'package:ar_demo_ti/Presentation/ar/ar_view_screen.dart';
 import 'package:ar_demo_ti/Presentation/joumey/joumey_card/joumey_card.dart';
 import 'package:ar_demo_ti/Presentation/quiz/quiz_screen.dart';
 import 'package:ar_demo_ti/Presentation/theme/theme.dart';
+import 'package:ar_demo_ti/core/app_3d_models_links.dart';
 import 'package:ar_demo_ti/examples/localandwebobjectsexample.dart';
 import 'package:ar_demo_ti/main.dart';
 import 'package:ar_demo_ti/models/conteudo_model.dart';
@@ -213,29 +214,25 @@ class _HomeScreenState extends State<HomeScreen>
               size: 20,
             ),
             const SizedBox(width: 8),
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: AppColors.lightText.withOpacity(0.8),
-                      fontSize: 12,
-                    ),
-                    overflow: TextOverflow.ellipsis,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: AppColors.lightText.withOpacity(0.8),
+                    fontSize: 12,
                   ),
-                  Text(
-                    value,
-                    style: TextStyle(
-                      color: AppColors.lightText,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                    overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  value,
+                  style: TextStyle(
+                    color: AppColors.lightText,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
@@ -392,7 +389,7 @@ class _HomeScreenState extends State<HomeScreen>
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                  'Conteudo',
+                  'Conteu00fados',
                   style: AppFont.subtitle,
                 ),
               ),
@@ -522,7 +519,13 @@ class _HomeScreenState extends State<HomeScreen>
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () => LocalAndWebObjectsWidget(),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LocalAndWebObjectsWidget(
+                            uri: App3DModelLink.coracao),
+                      ),
+                    ),
                     // onPressed: () => _viewContent(conteudo, jornada.id),
                     icon: Icon(
                       conteudo.tipo == 'ar'
@@ -543,7 +546,7 @@ class _HomeScreenState extends State<HomeScreen>
                 if (hasTeste)
                   OutlinedButton.icon(
                     onPressed: () => _startTest(teste),
-                    icon: const Icon(Icons.quiz, size: 18),
+                    icon: const Icon(Icons.quiz, size: 12),
                     label: const Text('Teste'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.secondaryColor,
