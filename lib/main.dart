@@ -34,7 +34,7 @@ class MedicalARApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MediAR',
+      title: 'AR Medicine',
       theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
       home: LoginScreen(),

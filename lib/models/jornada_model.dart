@@ -4,13 +4,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'conteudo_model.dart';
 import 'teste_model.dart';
-import 'user_model.dart';
 
 class Jornada {
   final String id;
   final String titulo;
   final String descricao;
-  final String imageKeyword;
+  final String imageUrl;
   final String category;
   final List<Conteudo> conteudos;
   final List<Teste> testes;
@@ -22,7 +21,7 @@ class Jornada {
     required this.id,
     required this.titulo,
     required this.descricao,
-    required this.imageKeyword,
+    required this.imageUrl,
     required this.category,
     required this.conteudos,
     required this.testes,
@@ -36,7 +35,7 @@ class Jornada {
       id: json['id'],
       titulo: json['titulo'],
       descricao: json['descricao'],
-      imageKeyword: json['imageKeyword'],
+      imageUrl: json['imageKeyword'],
       category: json['category'],
       conteudos: (json['conteudos'] as List)
           .map((conteudo) => Conteudo.fromJson(conteudo))
@@ -55,7 +54,7 @@ class Jornada {
       'id': id,
       'titulo': titulo,
       'descricao': descricao,
-      'imageKeyword': imageKeyword,
+      'imageKeyword': imageUrl,
       'category': category,
       'conteudos': conteudos.map((conteudo) => conteudo.toJson()).toList(),
       'testes': testes.map((teste) => teste.toJson()).toList(),
@@ -82,7 +81,7 @@ class Jornada {
       id: id ?? this.id,
       titulo: titulo ?? this.titulo,
       descricao: descricao ?? this.descricao,
-      imageKeyword: imageKeyword ?? this.imageKeyword,
+      imageUrl: imageKeyword ?? this.imageUrl,
       category: category ?? this.category,
       conteudos: conteudos ?? this.conteudos,
       testes: testes ?? this.testes,
@@ -173,108 +172,111 @@ class Jornada {
     return [
       Jornada(
         id: '1',
-        titulo: 'Anatomia Abdominal',
+        titulo: 'Anatomia do Coração',
         descricao:
-            'Estude as estruturas anatômicas do abdômen e sua relação com procedimentos cirúrgicos.',
-        imageKeyword: 'Abdominal Anatomy',
+            'Estude a estrutura e funcionamento do coração humano, incluindo suas câmaras, válvulas e sistema de condução.',
+        imageUrl:
+            'https://media.sketchfab.com/models/3f8072336ce94d18b3d0d055a1ece089/thumbnails/021a0c163a16426b8b4d2c4244e8386d/350bc8326661464fa1b3d4e64d250d85.jpeg',
         category: 'science',
         conteudos: [
           Conteudo(
             id: '1-1',
-            titulo: 'Visão Geral da Anatomia Abdominal',
+            titulo: 'Estrutura do Coração',
             tipo: 'ar',
-            dados: 'abdominal_wall',
-            descricao: 'Compreenda a estrutura básica da cavidade abdominal.',
+            dados: 'coracao',
+            descricao:
+                'Visualize a anatomia externa e interna do coração em 3D.',
           ),
           Conteudo(
             id: '1-2',
-            titulo: 'Órgãos Abdominais',
+            titulo: 'Sistema de Condução Cardíaca',
             tipo: 'ar',
-            dados: 'abdominal_organs',
+            dados: 'coracao',
             descricao:
-                'Estude o posicionamento e função dos órgãos na cavidade abdominal.',
+                'Compreenda como os impulsos elétricos se propagam pelo coração.',
           ),
         ],
         testes: [
           Teste(
             id: 'teste-1-1',
-            titulo: 'Quiz: Anatomia da Parede Abdominal',
+            titulo: 'Quiz: Anatomia do Coração',
             descricao:
-                'Teste seus conhecimentos sobre as camadas e estruturas da parede abdominal.',
+                'Teste seus conhecimentos sobre a estrutura anatômica do coração.',
             conteudoId: '1-1',
             perguntas: [
               {
                 'texto':
-                    'Qual das seguintes camadas NÃO faz parte da parede abdominal?',
+                    'Qual das seguintes câmaras do coração recebe sangue desoxigenado do corpo?',
                 'opcoes': [
-                  'Pele',
-                  'Fáscia superficial',
-                  'Peritônio',
-                  'Epitélio alveolar',
-                ],
-                'respostaCorreta': 3,
-                'explicacao':
-                    'O epitélio alveolar é encontrado nos pulmões, não na parede abdominal. A parede abdominal consiste em pele, fáscia superficial, músculos, fáscia transversal e peritônio.'
-              },
-              {
-                'texto':
-                    'Qual músculo forma a linha alba na parede abdominal anterior?',
-                'opcoes': [
-                  'Reto abdominal',
-                  'Transverso do abdômen',
-                  'Oblíquo externo',
-                  'É uma estrutura tendinosa, não muscular',
-                ],
-                'respostaCorreta': 3,
-                'explicacao':
-                    'A linha alba é uma estrutura tendinosa formada pela fusão das aponeuroses dos músculos abdominais na linha média.'
-              },
-              {
-                'texto':
-                    'Qual estrutura anatômica separa a cavidade abdominal da torácica?',
-                'opcoes': [
-                  'Diafragma',
-                  'Peritônio',
-                  'Fáscia transversal',
-                  'Músculos intercostais',
+                  'Átrio direito',
+                  'Átrio esquerdo',
+                  'Ventrículo direito',
+                  'Ventrículo esquerdo',
                 ],
                 'respostaCorreta': 0,
                 'explicacao':
-                    'O diafragma é o músculo que separa a cavidade torácica da abdominal e é essencial para a respiração.'
+                    'O átrio direito recebe sangue desoxigenado das veias cavas superior e inferior, proveniente da circulação sistêmica.'
+              },
+              {
+                'texto':
+                    'Qual válvula cardíaca separa o átrio esquerdo do ventrículo esquerdo?',
+                'opcoes': [
+                  'Válvula tricúspide',
+                  'Válvula mitral',
+                  'Válvula pulmonar',
+                  'Válvula aórtica',
+                ],
+                'respostaCorreta': 1,
+                'explicacao':
+                    'A válvula mitral (também chamada de bicúspide) separa o átrio esquerdo do ventrículo esquerdo, controlando o fluxo de sangue oxigenado dos pulmões para o ventrículo esquerdo.'
+              },
+              {
+                'texto':
+                    'Qual estrutura do coração é responsável por iniciar o impulso elétrico que leva à contração?',
+                'opcoes': [
+                  'Nodo sinoatrial (SA)',
+                  'Nodo atrioventricular (AV)',
+                  'Feixe de His',
+                  'Fibras de Purkinje',
+                ],
+                'respostaCorreta': 0,
+                'explicacao':
+                    'O nodo sinoatrial (SA), também conhecido como marcapasso natural do coração, é responsável por iniciar o impulso elétrico que desencadeia a contração cardíaca.'
               },
             ],
           ),
           Teste(
             id: 'teste-1-2',
-            titulo: 'Quiz: Órgãos Abdominais',
+            titulo: 'Quiz: Sistema de Condução Cardíaca',
             descricao:
-                'Teste seus conhecimentos sobre os órgãos na cavidade abdominal.',
+                'Teste seus conhecimentos sobre o sistema de condução elétrica do coração.',
             conteudoId: '1-2',
             perguntas: [
               {
                 'texto':
-                    'Qual das seguintes estruturas está localizada no quadrante inferior direito do abdômen?',
+                    'Qual é a sequência correta do sistema de condução cardíaca?',
                 'opcoes': [
-                  'Baço',
-                  'Apêndice',
-                  'Estômago',
-                  'Rim esquerdo',
+                  'Nodo SA → Nodo AV → Feixe de His → Fibras de Purkinje',
+                  'Nodo AV → Nodo SA → Feixe de His → Fibras de Purkinje',
+                  'Feixe de His → Nodo SA → Nodo AV → Fibras de Purkinje',
+                  'Fibras de Purkinje → Feixe de His → Nodo AV → Nodo SA',
+                ],
+                'respostaCorreta': 0,
+                'explicacao':
+                    'A sequência correta é: Nodo SA (marcapasso) → Nodo AV (atrasa o impulso) → Feixe de His (conduz aos ventrículos) → Fibras de Purkinje (distribuem o impulso pelo miocárdio ventricular).'
+              },
+              {
+                'texto':
+                    'Qual é a principal função do nodo atrioventricular (AV)?',
+                'opcoes': [
+                  'Iniciar o batimento cardíaco',
+                  'Atrasar o impulso elétrico entre átrios e ventrículos',
+                  'Bombear sangue para a aorta',
+                  'Fornecer oxigênio ao miocárdio',
                 ],
                 'respostaCorreta': 1,
                 'explicacao':
-                    'O apêndice vermiforme está localizado no quadrante inferior direito do abdômen, conectado ao ceco do intestino grosso.'
-              },
-              {
-                'texto': 'Qual é a principal função do peritônio?',
-                'opcoes': [
-                  'Fornecer suporte estrutural para os músculos abdominais',
-                  'Secretar enzimas digestivas',
-                  'Reduzir a fricção entre órgãos abdominais',
-                  'Armazenar gordura corporal',
-                ],
-                'respostaCorreta': 2,
-                'explicacao':
-                    'O peritônio é uma membrana serosa que reveste a cavidade abdominal e cobre a maioria dos órgãos abdominais. Sua principal função é reduzir a fricção entre órgãos e facilitar o movimento.'
+                    'O nodo AV atrasa o impulso elétrico por aproximadamente 0,1 segundo, permitindo que os átrios se contraiam e esvaziem seu conteúdo nos ventrículos antes da contração ventricular.'
               },
             ],
           ),
@@ -286,7 +288,8 @@ class Jornada {
         titulo: 'Técnicas de Sutura',
         descricao:
             'Aprenda diferentes técnicas de sutura utilizadas em procedimentos cirúrgicos.',
-        imageKeyword: 'Surgical Sutures',
+        imageUrl:
+            'https://media.post.rvohealth.io/wp-content/uploads/2020/08/6298-woman_physician_holding_a_suture_needle_in-732x549-thumbnail-732x549.jpg',
         category: 'health',
         conteudos: [
           Conteudo(
@@ -349,7 +352,8 @@ class Jornada {
         titulo: 'Instrumentação Cirúrgica',
         descricao:
             'Conheça os principais instrumentos utilizados em cirurgias gerais.',
-        imageKeyword: 'Surgical Instruments',
+        imageUrl:
+            'https://www.virginiamasoninstitute.org/wp-content/uploads/2019/09/Surgical-tools-online-newsletter.jpg',
         category: 'health',
         conteudos: [
           Conteudo(

@@ -1,7 +1,7 @@
 import 'package:ar_demo_ti/Presentation/quiz/quiz_result_widget.dart';
 import 'package:ar_demo_ti/Presentation/theme/theme.dart';
 import 'package:ar_demo_ti/models/teste_model.dart';
-import 'package:ar_demo_ti/service/app_state.dart';
+import 'package:ar_demo_ti/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

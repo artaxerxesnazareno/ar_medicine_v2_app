@@ -102,7 +102,7 @@ class _JourneyCardState extends State<JourneyCard>
                   children: [
                     // Journey image
                     Image.network(
-                      "https://upload.wikimedia.org/wikipedia/commons/3/3f/Dash_the_dart_mascot.png",
+                      widget.jornada.imageUrl,
                       height: 150,
                       width: double.infinity,
                       fit: BoxFit.cover,

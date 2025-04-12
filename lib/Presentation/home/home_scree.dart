@@ -92,7 +92,6 @@ class _HomeScreenState extends State<HomeScreen>
                 ],
               ),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
@@ -214,25 +213,31 @@ class _HomeScreenState extends State<HomeScreen>
               size: 20,
             ),
             const SizedBox(width: 8),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: AppColors.lightText.withOpacity(0.8),
-                    fontSize: 12,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: AppColors.lightText.withOpacity(0.8),
+                      fontSize: 12,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                Text(
-                  value,
-                  style: TextStyle(
-                    color: AppColors.lightText,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                  Text(
+                    value,
+                    style: TextStyle(
+                      color: AppColors.lightText,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
@@ -601,54 +606,5 @@ class _HomeScreenState extends State<HomeScreen>
       final appState = Provider.of<AppState>(context, listen: false);
       appState.refreshData();
     });
-  }
-
-  Widget _buildBottomNavigationBar() {
-    return Container(
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor,
-            blurRadius: 10,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-          selectedItemColor: AppColors.primaryColor,
-          unselectedItemColor: AppColors.grayShade,
-          showUnselectedLabels: true,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Ini00edcio',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.view_in_ar),
-              label: 'Realidade Aumentada',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.quiz),
-              label: 'Testes',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Perfil',
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
