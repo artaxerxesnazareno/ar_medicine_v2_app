@@ -1,5 +1,5 @@
 name: ar_demo_ti
-description: AR demo.
+description: AR Medicine - Aplicação de Realidade Aumentada para Medicina
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 version: 2.2.0+4
