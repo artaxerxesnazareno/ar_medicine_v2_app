@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:flutter/services.dart';
-import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
+
 import 'package:ar_demo_ti/examples/localandwebobjectsexample.dart';
+import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 void main() {
@@ -224,6 +225,7 @@ Nincs az internet bekapcsolva!
 
 class Example {
   const Example(this.name, this.description, this.onTap);
+
   final String name;
   final String description;
   final Function onTap;
