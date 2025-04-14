@@ -98,33 +98,47 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _buildAppBar(BuildContext context) {
     final appState = Provider.of<AppState>(context);
     final userName = appState.currentUser?.nome ?? 'Estudante';
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.symmetric(
+        horizontal: isSmallScreen ? 15 : 20,
+        vertical: isSmallScreen ? 15 : 20,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Olu00e1, $userName',
-                style: AppFont.regularBoldDark,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Continue seu aprendizado',
-                style: AppFont.bodyText,
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Ola, $userName',
+                  style: AppFont.regularBoldDark,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Continue seu aprendizado',
+                  style: isSmallScreen 
+                    ? AppFont.smallText 
+                    : AppFont.bodyText,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
+          SizedBox(width: isSmallScreen ? 8 : 16),
           CircleAvatar(
-            radius: 24,
+            radius: isSmallScreen ? 20 : 24,
             backgroundColor: AppColors.primaryColor,
             child: Icon(
               Icons.person,
               color: AppColors.lightText,
-              size: 28,
+              size: isSmallScreen ? 24 : 28,
             ),
           ),
         ],
@@ -139,10 +153,17 @@ class _HomeScreenState extends State<HomeScreen>
     final totalJornadas = appState.jornadasUsuario.length;
     final testesConcluidos = appState.totalTestesConcluidos;
     final pontuacaoMedia = appState.pontuacaoMedia.toInt();
+    
+    // Verifica o tamanho da tela para ajustar o layout
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.symmetric(
+        horizontal: isSmallScreen ? 12 : 20, 
+        vertical: isSmallScreen ? 15 : 20
+      ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -171,81 +192,138 @@ class _HomeScreenState extends State<HomeScreen>
                 'Seu Progresso',
                 style: TextStyle(
                   color: AppColors.lightText,
-                  fontSize: 18,
+                  fontSize: isSmallScreen ? 16 : 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Icon(
                 Icons.insights,
                 color: AppColors.lightText,
+                size: isSmallScreen ? 20 : 24,
               ),
             ],
           ),
-          const SizedBox(height: 15),
-          Row(
-            children: [
-              _buildProgressStat(
-                  'Jornadas', '$jornadasIniciadas/$totalJornadas', Icons.route),
-              const SizedBox(width: 15),
-              _buildProgressStat('Testes', '$testesConcluidos', Icons.quiz),
-              const SizedBox(width: 15),
-              _buildProgressStat('Nota', '$pontuacaoMedia%', Icons.star),
-            ],
-          ),
+          SizedBox(height: isSmallScreen ? 10 : 15),
+          // Usando um layout mais responsivo para os indicadores de progresso
+          isSmallScreen 
+              ? Column(
+                  children: [
+                    _buildProgressStat(
+                        'Jornadas', '$jornadasIniciadas/$totalJornadas', Icons.route, context),
+                    const SizedBox(height: 8),
+                    _buildProgressStat('Testes', '$testesConcluidos', Icons.quiz, context),
+                    const SizedBox(height: 8),
+                    _buildProgressStat('Nota', '$pontuacaoMedia%', Icons.star, context),
+                  ],
+                )
+              : Row(
+                  children: [
+                    _buildProgressStat(
+                        'Jornadas', '$jornadasIniciadas/$totalJornadas', Icons.route, context),
+                    const SizedBox(width: 15),
+                    _buildProgressStat('Testes', '$testesConcluidos', Icons.quiz, context),
+                    const SizedBox(width: 15),
+                    _buildProgressStat('Nota', '$pontuacaoMedia%', Icons.star, context),
+                  ],
+                ),
         ],
       ),
     );
   }
 
-  Widget _buildProgressStat(String title, String value, IconData icon) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-        decoration: BoxDecoration(
-          color: AppColors.lightText.withOpacity(0.2),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              color: AppColors.lightText,
-              size: 20,
+  Widget _buildProgressStat(String title, String value, IconData icon, BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
+    
+    return isSmallScreen
+        ? Container(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            decoration: BoxDecoration(
+              color: AppColors.lightText.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12),
             ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  color: AppColors.lightText,
+                  size: 18,
+                ),
+                const SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: AppColors.lightText.withOpacity(0.8),
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(
+                      value,
+                      style: TextStyle(
+                        color: AppColors.lightText,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          )
+        : Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              decoration: BoxDecoration(
+                color: AppColors.lightText.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Row(
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: AppColors.lightText.withOpacity(0.8),
-                      fontSize: 12,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  Icon(
+                    icon,
+                    color: AppColors.lightText,
+                    size: 20,
                   ),
-                  Text(
-                    value,
-                    style: TextStyle(
-                      color: AppColors.lightText,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            color: AppColors.lightText.withOpacity(0.8),
+                            fontSize: 12,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          value,
+                          style: TextStyle(
+                            color: AppColors.lightText,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 
   Widget _buildJourneyList(List<Jornada> jornadas) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
+    
     if (jornadas.isEmpty) {
       return Center(
         child: Column(
@@ -253,7 +331,7 @@ class _HomeScreenState extends State<HomeScreen>
           children: [
             Icon(
               Icons.school,
-              size: 64,
+              size: isSmallScreen ? 48 : 64,
               color: AppColors.grayShade,
             ),
             const SizedBox(height: 16),
@@ -261,7 +339,7 @@ class _HomeScreenState extends State<HomeScreen>
               'Nenhuma jornada encontrada',
               style: TextStyle(
                 color: AppColors.darkText,
-                fontSize: 18,
+                fontSize: isSmallScreen ? 16 : 18,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -270,7 +348,7 @@ class _HomeScreenState extends State<HomeScreen>
               'Explore as jornadas disponíveis',
               style: TextStyle(
                 color: AppColors.grayShade,
-                fontSize: 14,
+                fontSize: isSmallScreen ? 12 : 14,
               ),
             ),
           ],
@@ -279,7 +357,10 @@ class _HomeScreenState extends State<HomeScreen>
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.symmetric(
+        horizontal: isSmallScreen ? 15 : 20,
+        vertical: isSmallScreen ? 15 : 20,
+      ),
       itemCount: jornadas.length,
       itemBuilder: (context, index) {
         return JourneyCard(
@@ -394,7 +475,7 @@ class _HomeScreenState extends State<HomeScreen>
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                  'Conteu00fados',
+                  'Conteúdos',
                   style: AppFont.subtitle,
                 ),
               ),

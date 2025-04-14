@@ -64,6 +64,8 @@ class _JourneyCardState extends State<JourneyCard>
   @override
   Widget build(BuildContext context) {
     final progress = widget.jornada.progresso;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
 
     return GestureDetector(
       onTapDown: _onTapDown,
@@ -146,7 +148,7 @@ class _JourneyCardState extends State<JourneyCard>
                         widget.jornada.titulo,
                         style: TextStyle(
                           color: AppColors.lightText,
-                          fontSize: 20,
+                          fontSize: isSmallScreen ? 18 : 20,
                           fontWeight: FontWeight.bold,
                           shadows: [
                             Shadow(
@@ -164,7 +166,7 @@ class _JourneyCardState extends State<JourneyCard>
 
               // Bottom section with description and progress
               Container(
-                padding: const EdgeInsets.all(15),
+                padding: EdgeInsets.all(isSmallScreen ? 12 : 15),
                 decoration: BoxDecoration(
                   color: AppColors.whiteShade,
                   borderRadius: const BorderRadius.only(
@@ -179,27 +181,43 @@ class _JourneyCardState extends State<JourneyCard>
                       widget.jornada.descricao,
                       style: TextStyle(
                         color: AppColors.darkText,
-                        fontSize: 14,
+                        fontSize: isSmallScreen ? 12 : 14,
                         height: 1.4,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 15),
-                    Row(
-                      children: [
-                        _buildInfoChip(
-                          Icons.timer,
-                          '${widget.jornada.tempoEstimado} min',
-                        ),
-                        const SizedBox(width: 10),
-                        _buildInfoChip(
-                          Icons.quiz,
-                          '${widget.jornada.testes.length} testes',
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
+                    SizedBox(height: isSmallScreen ? 12 : 15),
+                    // Em telas muito pequenas, os chips ficam em coluna
+                    isSmallScreen && screenWidth < 300
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildInfoChip(
+                                Icons.timer,
+                                '${widget.jornada.tempoEstimado} min',
+                              ),
+                              const SizedBox(height: 6),
+                              _buildInfoChip(
+                                Icons.quiz,
+                                '${widget.jornada.testes.length} testes',
+                              ),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              _buildInfoChip(
+                                Icons.timer,
+                                '${widget.jornada.tempoEstimado} min',
+                              ),
+                              const SizedBox(width: 10),
+                              _buildInfoChip(
+                                Icons.quiz,
+                                '${widget.jornada.testes.length} testes',
+                              ),
+                            ],
+                          ),
+                    SizedBox(height: isSmallScreen ? 12 : 15),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -210,7 +228,7 @@ class _JourneyCardState extends State<JourneyCard>
                               'Progresso',
                               style: TextStyle(
                                 color: AppColors.darkText,
-                                fontSize: 14,
+                                fontSize: isSmallScreen ? 12 : 14,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -218,7 +236,7 @@ class _JourneyCardState extends State<JourneyCard>
                               '${(progress * 100).toInt()}%',
                               style: TextStyle(
                                 color: AppColors.primaryColor,
-                                fontSize: 14,
+                                fontSize: isSmallScreen ? 12 : 14,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -239,24 +257,31 @@ class _JourneyCardState extends State<JourneyCard>
   }
 
   Widget _buildInfoChip(IconData icon, String text) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: EdgeInsets.symmetric(
+        horizontal: isSmallScreen ? 8 : 10, 
+        vertical: isSmallScreen ? 4 : 5
+      ),
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(isSmallScreen ? 12 : 15),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             icon,
-            size: 14,
-            color: AppColors.secondaryColor,
+            size: isSmallScreen ? 12 : 14,
+            color: AppColors.primaryColor,
           ),
-          const SizedBox(width: 5),
+          SizedBox(width: isSmallScreen ? 4 : 6),
           Text(
             text,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: isSmallScreen ? 10 : 12,
               color: AppColors.darkText,
             ),
           ),
@@ -266,29 +291,13 @@ class _JourneyCardState extends State<JourneyCard>
   }
 
   Widget _buildProgressBar(double progress) {
-    return Container(
-      height: 8,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColors.progressBarBackground,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Row(
-        children: [
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            width: (MediaQuery.of(context).size.width - 60) * progress,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.primaryColor,
-                  AppColors.secondaryColor,
-                ],
-              ),
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-        ],
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(4),
+      child: LinearProgressIndicator(
+        value: progress,
+        backgroundColor: AppColors.progressBarBackground,
+        valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryColor),
+        minHeight: 6,
       ),
     );
   }
