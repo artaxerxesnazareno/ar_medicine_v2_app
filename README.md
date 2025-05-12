@@ -56,6 +56,10 @@ lib/
   <p><strong>Não consegue visualizar o vídeo?</strong> <a href="https://github.com/artaxerxesnazareno/ar_medicine_v2_app/blob/main/assets/ar%20demo.mp4" target="_blank">Clique aqui para assistir no GitHub</a></p>
 </div>
 
+
+https://github.com/user-attachments/assets/1fdf8353-7690-4eb4-a79c-c4370d28c8ce
+
+https://github.com/artaxerxesnazareno/ar_medicine_v2_app/blob/main/assets/ar%20demo.mp4
 ### Screenshots do Aplicativo
 
 <div align="center">
