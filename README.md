@@ -43,8 +43,45 @@ lib/
 
 ## 📸 Demonstração
 
+### Vídeo Demonstrativo do Aplicativo em Funcionamento
 
-[Vídeo de Demonstração](https://github.com/artaxerxesnazareno/ar_medicine_v2_app/blob/main/assets/ar%20demo.mp4)
+<div align="center">
+  <video width="320" height="640" controls>
+    <source src="https://github.com/artaxerxesnazareno/ar_medicine_v2_app/raw/main/assets/ar%20demo.mp4" type="video/mp4">
+    Seu navegador não suporta a tag de vídeo.
+  </video>
+</div>
+
+<div align="center">
+  <p><strong>Não consegue visualizar o vídeo?</strong> <a href="https://github.com/artaxerxesnazareno/ar_medicine_v2_app/blob/main/assets/ar%20demo.mp4" target="_blank">Clique aqui para assistir no GitHub</a></p>
+</div>
+
+### Screenshots do Aplicativo
+
+<div align="center">
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+    <img src="assets/screenshots/screenshot (1).png" alt="Tela de Login" width="220" style="margin: 5px;">
+    <img src="assets/screenshots/screenshot (2).png" alt="Tela de Registro" width="220" style="margin: 5px;">
+    <img src="assets/screenshots/screenshot (3).png" alt="Menu Principal" width="220" style="margin: 5px;">
+    <img src="assets/screenshots/screenshot (4).png" alt="Visualização AR" width="220" style="margin: 5px;">
+    <img src="assets/screenshots/screenshot (5).png" alt="Modelo 3D" width="220" style="margin: 5px;">
+    <img src="assets/screenshots/screenshot (6).png" alt="Jornada de Aprendizado" width="220" style="margin: 5px;">
+  </div>
+</div>
+
+<div align="center">
+  <details>
+    <summary><strong>Ver mais screenshots</strong></summary>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 15px;">
+      <img src="assets/screenshots/screenshot (7).png" alt="Interação com Modelo" width="220" style="margin: 5px;">
+      <img src="assets/screenshots/screenshot (8).png" alt="Visualização Detalhada" width="220" style="margin: 5px;">
+      <img src="assets/screenshots/screenshot (9).png" alt="Estatísticas de Uso" width="220" style="margin: 5px;">
+      <img src="assets/screenshots/screenshot (10).png" alt="Configurações" width="220" style="margin: 5px;">
+      <img src="assets/screenshots/screenshot (11).png" alt="Perfil do Usuário" width="220" style="margin: 5px;">
+    </div>
+  </details>
+</div>
+
 ## 💡 Desafios e Soluções
 
 Durante o desenvolvimento deste projeto, enfrentei diversos desafios técnicos:
@@ -68,7 +105,7 @@ Durante o desenvolvimento deste projeto, enfrentei diversos desafios técnicos:
 
 ```bash
 # Clone este repositório
-git clone https://github.com/seuusuario/ar_medicine.git
+git clone https://github.com/artaxerxesnazareno/ar_medicine_v2_app.git
 
 # Navegue até o diretório do projeto
 cd ar_medicine
