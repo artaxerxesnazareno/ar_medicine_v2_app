@@ -47,7 +47,7 @@ lib/
 
 <div align="center">
   <video width="320" height="640" controls>
-    <source src="https://github.com/artaxerxesnazareno/ar_medicine_v2_app/raw/main/assets/ar%20demo.mp4" type="video/mp4">
+    <source src="assets/ar%20demo.mp4" type="video/mp4">
     Seu navegador não suporta a tag de vídeo.
   </video>
 </div>
@@ -57,9 +57,12 @@ lib/
 </div>
 
 
-https://github.com/user-attachments/assets/1fdf8353-7690-4eb4-a79c-c4370d28c8ce
 
-https://github.com/artaxerxesnazareno/ar_medicine_v2_app/blob/main/assets/ar%20demo.mp4
+
+https://github.com/user-attachments/assets/7e79a171-f0ed-427f-bf52-8c91c5b03075
+
+
+
 ### Screenshots do Aplicativo
 
 <div align="center">
@@ -130,7 +133,7 @@ flutter run
 
 ## 👤 Desenvolvedor
 
-Desenvolvido por [Seu Nome] - [Seu LinkedIn/GitHub]
+Desenvolvido por Artaxerxes Nazareno - [Seu LinkedIn/GitHub]
 
 ## 📄 Licença
 
